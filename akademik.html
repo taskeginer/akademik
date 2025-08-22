@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TASKEGINER</title>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00ffe0;
+      --secondary: #00bfa5;
+      --accent: #e74c3c;
+      --bg-dark: linear-gradient(145deg, #1a1a1d, #0e0e10);
+      --text-light: #e0e0e0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(20, 20, 20, 0.8);
+      color: var(--primary);
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 15px rgba(0, 255, 224, 0.2);
+    }
+
+    .price-card {
+      background: rgba(15, 15, 17, 0.9);
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 255, 224, 0.1);
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .price-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 255, 224, 0.3);
+    }
+
+    .price-tag {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 10px 0;
+      text-shadow: 0 0 8px rgba(0, 255, 224, 0.6);
+    }
+
+    .note-box {
+      background: rgba(255, 249, 230, 0.05);
+      border-left: 4px solid var(--primary);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      position: relative;
+      box-shadow: 0 0 10px rgba(0, 255, 224, 0.1);
+    }
+
+    .note-box strong {
+      color: var(--primary);
+    }
+
+    .whatsapp-btn {
+      display: inline-block;
+      background: var(--secondary);
+      color: white !important;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 10px;
+      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .whatsapp-btn:hover {
+      background: var(--primary);
+      box-shadow: 0 0 15px var(--primary);
+      transform: translateY(-5px);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: rgba(15, 15, 17, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      color: var(--text-light);
+      box-shadow: 0 0 20px rgba(0, 255, 224, 0.2);
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      text-align: center;
+      color: var(--primary);
+    }
+
+    .modal-content label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid rgba(0, 255, 224, 0.4);
+      border-radius: 8px;
+      background: #0e0e10;
+      color: var(--text-light);
+    }
+
+    .modal-content button[type="submit"] {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 255, 224, 0.2);
+    }
+
+    .modal-content button[type="submit"]:hover {
+      background-color: var(--primary);
+      box-shadow: 0 0 15px var(--primary);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Konten HTML asli kamu tetap sama di sini -->
+  
+  <header class="header" data-aos="fade-down">
+    <h1>🎓 JASA JOKI AKADEMIK PROFESIONAL</h1>
+    <p>Layanan Lengkap Tugas, Diskusi, dan Bimbingan Kuliah Online</p>
+  </header>
+
+  <!-- Formulir Pesan & Upload File (hanya pesan yang dikirim ke WhatsApp) -->
+  <div class="price-card" data-aos="fade-up" style="margin-bottom:2rem;">
+    <form id="formUpload" style="display:flex;flex-direction:column;gap:1rem;" onsubmit="kirimPesanUpload(); return false;">
+      <label for="pesanTulisan" style="color:var(--primary);font-weight:bold;">Tulis Tugas:</label>
+      <textarea id="pesanTulisan" rows="4" style="border-radius:8px;padding:10px;border:1px solid #00ffe0;background:#0e0e10;color:var(--text-light);" placeholder="Copy Paste Tugas disini..."></textarea>
+      
+      <label for="fileUpload" style="color:var(--primary);font-weight:bold;">Upload File (opsional):</label>
+      <input type="file" id="fileUpload" style="color:var(--text-light);">
+
+      <button type="submit" style="background:var(--secondary);color:white;padding:10px 0;border-radius:8px;border:none;font-weight:bold;cursor:pointer;">Kirim</button>
+      <small style="color:var(--primary);opacity:0.7;">*File tidak bisa dikirim langsung, silakan kirim file via chat setelah mengirim pesan.</small>
+    </form>
+  </div>
+
+  <!-- Modal Tambahan Setelah Kirim -->
+  <div class="modal" id="modalInfoLanjutan">
+    <div class="modal-content">
+      <button class="close-btn" onclick="tutupInfoLanjutan()">Tutup</button>
+      <h2>Informasi Tambahan</h2>
+      <form id="formInfoLanjutan" onsubmit="kirimInfoLanjutan(); return false;">
+        <label for="universitas">Universitas:</label>
+        <input type="text" id="universitas" required>
+
+        <label for="matkul">Mata Kuliah:</label>
+        <input type="text" id="matkul" required>
+
+        <label for="emailGoogle">Akun Google Aktif (Email):</label>
+        <input type="email" id="emailGoogle" required>
+
+        <button type="submit">Kirim ke Admin WhatsApp</button>
+      </form>
+    </div>
+  </div>
+
+<div class="price-card fade-in-up" data-aos="fade-up" data-aos-delay="300">
+  <h2>📗 Layanan Lain</h2>
+  <ul>
+    <li><strong> Skripsi, Tesis dan Disertasi (Seluruh Jurusan)</li>
+    <li><strong> Publish Jurnal (Sinta 1-6 & Scopus Q1-Q4)</li>
+    <li><strong> Artikel Jurnal (Studi Literatur & Penelitian)</li>
+    <li><strong> Olah Data (Kualitatif & Kuantitatif)</li>
+    <li><strong> Project Tugas Akhir (Coding, Website, Aplikasi, dan lain-lain)</li>
+    <li><strong> Editing format skripsi</li>
+    <li><strong> Design Grafis</li>
+    <li><strong> Makalah</li>
+    <li><strong> PowerPoint</li>
+    <li><strong> Laporan Magang/PKL</li>
+  </ul>
+</div>
+
+  <div class="note-box fade-in-up" data-aos="zoom-in-up">
+    <strong>Benefit:</strong>
+    <p>
+      • Free Rekomendasi Judul<br>
+      • Free Dapus Mendeley/Zotero<br>
+      • Free Bimbingan<br>
+      • Free PPT/Formating/Outline<br>
+      • Free Turnitin<br>
+      • Free Revisi<br>
+      • Garansi 1 Bulan<br>
+      • Bisa Dicicil (FULL BAB)<br>
+      • Privat Grub dengan Tentor
+    </p>
+  </div>
+ 
+ <center data-aos="fade-up">   
+    </a>
+    <a class="whatsapp-btn" href="https://api.whatsapp.com/send?phone=6285768163579">
+      📞 Info Lebih Lanjut Klik Disini
+    </a>
+  </center>
+
+<!-- Bagian khusus Universitas Terbuka (Singkat & Expandable) -->
+<div id="ut-section" class="price-card" style="cursor:pointer;" onclick="toggleUTDetail()" data-aos="fade-up">
+  <div id="ut-summary">
+    <h2>KHUSUS UNIVERSITAS TERBUKA</h2>
+    <p>Layanan Tugas & Diskusi. <span style="color:var(--primary);font-weight:bold;">(Klik untuk detail)</span></p>
+  </div>
+  <div id="ut-detail" style="display:none;">
+    <div class="price-card fade-in-up">
+      <h2>📘 Semester 1–5</h2>
+      <ul>
+        <li><strong>Tugas per sesi</strong><div class="price-tag">Rp2.500</div></li>
+        <li><strong>Diskusi per sesi</strong><div class="price-tag">Rp2.500</div></li>
+        <li><strong>1 Sesi</strong><div class="price-tag">Rp27.500</div></li>
+        <li><strong>1 Semester (Sesi 1–8)</strong><div class="price-tag">Rp220.000</div></li>
+      </ul>
+    </div>
+    <div class="price-card fade-in-up" data-aos-delay="100">
+      <h2>📘 Paket Lengkap</h2>
+      <h2> Dari Semester 1–5</h2>
+      <ul>
+        <li><strong>Sesi 1</strong>: Diskusi</li>
+        <li><strong>Sesi 2</strong>: Diskusi</li>
+        <li><strong>Sesi 3</strong>: Diskusi, Tugas 1</li>
+        <li><strong>Sesi 4</strong>: Diskusi</li>
+        <li><strong>Sesi 5</strong>: Diskusi, Tugas 2</li>
+        <li><strong>Sesi 6</strong>: Diskusi</li>
+        <li><strong>Sesi 7</strong>: Diskusi, Tugas 3</li>
+        <li><strong>Sesi 8</strong>: Diskusi</li>
+      </ul>
+      <strong>Total Paket Lengkap</strong><div class="price-tag">Rp1.100.000</div>
+    </div>
+    <div class="price-card fade-in-up" data-aos-delay="200">
+      <h2>📗 Semester 6–8</h2>
+      <ul>
+        <li><strong>Tugas per sesi</strong><div class="price-tag">Rp5.000</div></li>
+        <li><strong>Diskusi per sesi</strong><div class="price-tag">Rp5.000</div></li>
+        <li><strong>1 Sesi</strong><div class="price-tag">Rp55.000</div></li>
+        <li><strong>1 Semester (Sesi 1–8)</strong><div class="price-tag">Rp440.000</div></li>
+      </ul>
+    </div>
+    <div class="price-card fade-in-up" data-aos-delay="300">
+      <h2>📗 Paket Lengkap</h2>
+      <h2> Dari Semester 6–8</h2>
+      <ul>
+        <li><strong>Sesi 1</strong>: Diskusi</li>
+        <li><strong>Sesi 2</strong>: Diskusi</li>
+        <li><strong>Sesi 3</strong>: Diskusi, Tugas 1</li>
+        <li><strong>Sesi 4</strong>: Diskusi</li>
+        <li><strong>Sesi 5</strong>: Diskusi, Tugas 2</li>
+        <li><strong>Sesi 6</strong>: Diskusi</li>
+        <li><strong>Sesi 7</strong>: Diskusi, Tugas 3</li>
+        <li><strong>Sesi 8</strong>: Diskusi</li>
+      </ul>
+      <strong>Total Paket Lengkap</strong><div class="price-tag">Rp1.320.000</div>
+    </div>
+    <div class="note-box fade-in-up">
+      <p>
+        • Tidak dikenakan DP, pembayaran dilakukan setelah selesai<br>
+        • Diskon 40% untuk pelanggan baru<br>
+        • Garansi revisi gratis 3 hari<br>
+        • Khusus UT: Penyesuaian format modul
+      </p>
+    </div>
+  </div>
+</div>
+
+  <div class="note-box fade-in-up" data-aos="zoom-in-up" data-aos-delay="200">
+    <strong>Catatan Penting:</strong>
+    <p>
+      Menggunakan jasa joki bisa melanggar etika akademik dan bisa membuat mahasiswa dikeluarkan dari kampus jika ketahuan, 
+      Informasi ini bersifat rahasia dan hanya untuk keperluan pribadi pengguna,
+      Kami memohon kerahasiaan atas hal ini demi menjaga reputasi bersama.
+    </p>
+  </div>
+
+  <center data-aos="fade-up">
+    <a class="whatsapp-btn" href="javascript:void(0);" onclick="bukaFormulir()">
+      📝 Pesan Sekarang
+    </a>
+    <a class="whatsapp-btn" href="https://api.whatsapp.com/send?phone=6285768163579">
+      📞 Untuk Pelayanan yang lain & Info Lebih Lanjut Klik Disini
+    </a>
+  </center>
+
+  <!-- Modal Formulir -->
+  <div class="modal" id="modalFormulir">
+    <div class="modal-content">
+      <button class="close-btn" onclick="tutupFormulir()">Tutup</button>
+      <h2>Formulir Pemesanan</h2>
+      <form onsubmit="kirimKeWhatsApp(); return false;">
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" required>
+
+        <label for="nim">NIM:</label>
+        <input type="text" id="nim" required>
+        
+        <label for="Password">Password:</label>
+        <input type="text" id="Password" required>
+
+        <label for="jurusan">Jurusan:</label>
+        <input type="text" id="jurusan" required>
+
+        <label for="semester">Semester:</label>
+        <input type="number" id="semester" min="1" max="14" required>
+
+        <label for="whatsapp">No WhatsApp:</label>
+        <input type="tel" id="whatsapp" pattern="[0-9]{10,15}" required>
+
+        <button type="submit">Kirim ke WhatsApp</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+
+    function bukaFormulir() {
+      document.getElementById('modalFormulir').style.display = 'flex';
+    }
+
+    function tutupFormulir() {
+      document.getElementById('modalFormulir').style.display = 'none';
+    }
+
+    function kirimKeWhatsApp() {
+      const nama = document.getElementById("nama").value;
+      const nim = document.getElementById("nim").value;
+      const Password = document.getElementById("Password").value;
+      const jurusan = document.getElementById("jurusan").value;
+      const semester = document.getElementById("semester").value;
+      const whatsapp = document.getElementById("whatsapp").value;
+
+      const tujuan = "6285768163579";
+      const pesan = `Halo, saya ingin mendaftar.%0A%0A` +
+                    `Nama: ${nama}%0A` +
+                    `NIM: ${nim}%0A` +
+                    `Password: ${Password}%0A` +
+                    `Jurusan: ${jurusan}%0A` +
+                    `Semester: ${semester}%0A` +
+                    `No WA: ${whatsapp}`;
+
+      const url = `https://wa.me/${tujuan}?text=${pesan}`;
+      window.open(url, "_blank");
+      tutupFormulir();
+    }
+
+    function kirimPesanUpload() {
+      const pesan = document.getElementById('pesanTulisan').value.trim();
+      const fileInput = document.getElementById('fileUpload');
+      const file = fileInput.files[0];
+
+      if (!pesan && !file) {
+        alert('Silakan isi pesan atau pilih file untuk dikirim.');
+        return;
+      }
+
+      // Tampilkan modal info lanjutan DULU, WhatsApp nanti setelah isi modal
+      document.getElementById('modalInfoLanjutan').style.display = 'flex';
+
+      // Simpan data pesan dan file di variabel global sementara
+      window._pesanUpload = { pesan, file };
+    }
+
+    function tutupInfoLanjutan() {
+      document.getElementById('modalInfoLanjutan').style.display = 'none';
+      window._pesanUpload = null;
+    }
+
+    function kirimInfoLanjutan() {
+      const universitas = document.getElementById('universitas').value.trim();
+      const matkul = document.getElementById('matkul').value.trim();
+      const emailGoogle = document.getElementById('emailGoogle').value.trim();
+
+      if (!universitas || !matkul || !emailGoogle) {
+        alert('Semua kolom wajib diisi.');
+        return;
+      }
+
+      // Ambil data pesan dan file dari variabel global
+      const pesanObj = window._pesanUpload || {};
+      let pesanWA = "Halo Admin, saya ingin mengirim pesan/keterangan:%0A";
+      if (pesanObj.pesan) {
+        pesanWA += `%0A${pesanObj.pesan}`;
+      }
+      if (pesanObj.file) {
+        pesanWA += `%0A(Saya juga ingin mengirim file: ${pesanObj.file.name}, akan saya kirim lewat chat WhatsApp setelah ini)`;
+      }
+
+      pesanWA += `%0A%0AInformasi Tambahan:%0AUniversitas: ${universitas}%0AMata Kuliah: ${matkul}%0AAkun Google Aktif: ${emailGoogle}`;
+
+      const tujuan = "6285768163579";
+      const url = `https://wa.me/${tujuan}?text=${pesanWA}`;
+      window.open(url, "_blank");
+
+      document.getElementById('formUpload').reset();
+      document.getElementById('formInfoLanjutan').reset();
+      tutupInfoLanjutan();
+    }
+
+    // Fungsi untuk toggle detail Universitas Terbuka
+    function toggleUTDetail() {
+      const detail = document.getElementById('ut-detail');
+      detail.style.display = (detail.style.display === 'none' || detail.style.display === '') ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>
